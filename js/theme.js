@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Проверяем, какая тема была выбрана ранее
     if (localStorage.getItem("darkMode") === "enabled") {
         body.classList.add("dark-mode");
-        themeIcon.src = "IMG/sun.png"; // Меняем иконку
+        themeIcon.src = "assets/images/sun.png"; // Меняем иконку
     }
 
     themeToggle.addEventListener("click", function() {
@@ -28,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Меняем иконку при смене темы
         if (body.classList.contains("dark-mode")) {
-            themeIcon.src = "IMG/sun.png";
+            themeIcon.src = "assets/images/sun.png";
             localStorage.setItem("darkMode", "enabled");
         } else {
-            themeIcon.src = "IMG/moon.png";
+            themeIcon.src = "assets/images/moon.png";
             localStorage.setItem("darkMode", "disabled");
         }
     });

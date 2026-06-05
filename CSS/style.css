@@ -5,6 +5,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+    max-height: 50px;
 }
 
 #header img {
@@ -16,8 +17,8 @@
 
 #main_conteiner {
     background: #efe412;
-    height: 250px;
-    
+    height: 50px;
+    border-radius: 10px;
 }
 
 body {
@@ -31,140 +32,9 @@ header {
     padding: 20px;
 }
 
-#pokemon-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-}
-
-.pokemon-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    width: 200px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-}
-
-.pokemon-card img {
-    width: 100%;
-}
-
-.pokemon-card button {
-    background-color: #ff5722;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-}
-
-#menu1{
-    background-color: #f3eb08;
-    position: relative;
-    display: block;
-    width: 100%;
-    height: auto;
-    z-index: 10;
-}
-
-.carousele{
-    margin: 10px;
-}
-
-.carousele div img{
-    width: 100%
-}
-
-#menu1 ul{
-    position: relative;
-    display: block;
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-    height: auto;
-    list-style: none;
-}
-
-#menu1 > ul::after{
-    display: block;
-    width: 100%;
-    height: 0px;
-    clear: both;
-    content: " ";
-}
-
-#menu1 ul li{
-    position: relative;
-    display: block;
-    float: left;
-    width: auto;
-    height: auto;
-}
-
-#menu1 ul li a{
-    display: block;
-    padding: 9px 25px 0px 25px;
-    font-size: 14px;
-    line-height: 1.3em;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    height: 36px;
-    box-sizing: border-box;
-    color: rgb(33, 33, 32);
-}
-
-#menu1 ul li ul{
-    position: absolute;
-    top: 36px;
-    left: 0px;
-    display: none;
-    width: 200px;
-    background: #38b6ff;
-}
-
-#menu1 ul li:hover ul{
-    display: block;
-}
-
-#menu1 ul li ul li{
-    float: none;
-    width: 100%;
-}
-    
-#menu1 ul li ul li a{
-    display: block;
-    text-transform: none;
-    height: auto;
-    padding: 7px 25px;
-    width: 100%;
-    box-sizing: border-box;
-    border-top: 1px solid #ebf308;
-    color: rgb(255, 255, 255);
-}
-    
-#menu1 ul li ul li:first-child a{
-    border-top: 0px;
-}
-
-.carousele {
-    width: 80%; /* Уменьшаем ширину карусели для центрирования */
-    margin: 20px auto;
-}
-
-.carousele-element {
-    text-align: center;
-    padding: 10px;
-}
-
-.carousele-element img {
-    width: 100%; 
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease; 
+#logoImg{
+    width: 50px;
+    height: 50px;
 }
 
 /* Увеличение центрального элемента */
@@ -175,16 +45,7 @@ header {
 /* Темная тема */
 .dark-mode {
     background-color: #121212;
-    color: white;
-}
-
-.dark-mode .pokemon-card {
-    background-color: #333;
-    color: white;
-}
-
-.dark-mode #menu1 {
-    background-color: #222;
+    color: rgb(73, 73, 73);
 }
 
 .dark-mode a {
@@ -193,7 +54,7 @@ header {
 
 #theme-toggle {
     position: fixed; /* Фиксируем кнопку на экране */
-    top: 20px;
+    top: 10px;
     right: 20px;
     width: 50px; /* Размер кнопки */
     height: 50px;
@@ -218,12 +79,6 @@ header {
     transition: transform 0.3s;
 }
 
-/* Темная тема */
-.dark-mode {
-    background-color: #121212;
-    color: white;
-}
-
 .dark-mode #theme-toggle {
     background: rgba(255, 255, 255, 0.1);
 }
@@ -236,13 +91,6 @@ header {
     font-family: "Lilita One", sans-serif;
     font-weight: 400;
     font-style: normal;
-  }
-
-.video-player video {
-    width: 100%;
-    max-width: 600px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .separator {
@@ -259,5 +107,3 @@ header {
 }
 
   
-
-
