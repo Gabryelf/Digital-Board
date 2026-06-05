@@ -1,0 +1,109 @@
+#header {
+    text-align: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-height: 50px;
+}
+
+#header img {
+    max-width: 100%; 
+    height: auto; 
+    display: block;
+}
+
+
+#main_conteiner {
+    background: #efe412;
+    height: 50px;
+    border-radius: 10px;
+}
+
+body {
+    font-family: "Lilita One", sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #ffcc00;
+    padding: 20px;
+}
+
+#logoImg{
+    width: 50px;
+    height: 50px;
+}
+
+/* Увеличение центрального элемента */
+.slick-center .carousele-element img {
+    transform: scale(1.3); 
+}
+
+/* Темная тема */
+.dark-mode {
+    background-color: #121212;
+    color: rgb(73, 73, 73);
+}
+
+.dark-mode a {
+    color: #fff;
+}
+
+#theme-toggle {
+    position: fixed; /* Фиксируем кнопку на экране */
+    top: 10px;
+    right: 20px;
+    width: 50px; /* Размер кнопки */
+    height: 50px;
+    border: none;
+    background: rgba(0, 0, 0, 0.1); /* Полупрозрачный фон */
+    border-radius: 50%; /* Делаем кнопку круглой */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+#theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#theme-toggle img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s;
+}
+
+.dark-mode #theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #theme-toggle img {
+    transform: rotate(180deg); /* Плавный переход */
+}
+
+.lilita-one-regular h1 {
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.separator {
+    height: 10px; /* Высота разделителя */
+    background-color: rgba(255, 255, 255, 0); /* Прозрачный фон */
+    margin: 20px 0; /* Отступы сверху и снизу */
+    border-radius: 5px; /* Закругленные углы */
+}
+
+
+.social-links a img {
+    width: 80px;
+    height: 80px;
+}
+
+  
