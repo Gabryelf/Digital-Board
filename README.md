@@ -1,9 +1,13 @@
 
 <div align="center">
 
-# 🎨 Цифровая доска - Digital Board
-
-### Интерактивный инструмент для рисования схем и объяснений
+<div align="center">
+  <kbd>
+    <img src="https://github.com/Gabryelf/Digital-Board/blob/main/docs/images/logo.gif" alt="Интерфейс доски" width="80%">
+  </kbd>
+  
+  ### Интерактивный инструмент для рисования схем и объяснений
+</div>
 
 ![Версия](https://img.shields.io/badge/версия-0.0.1-blue)
 ![Лицензия](https://img.shields.io/badge/лицензия-MIT-green)
@@ -23,7 +27,10 @@
 
 <div align="center">
   <kbd>
-    <img src="https://via.placeholder.com/800x450/F5F0E0/2c3e50?text=Демонстрация+интерфейса" alt="Интерфейс доски" width="80%">
+    <img src="https://github.com/Gabryelf/Digital-Board/blob/main/docs/screens/2026-06-05_20-56-01.png" alt="Интерфейс доски" width="80%">
+  </kbd>
+  <kbd>
+    <img src="https://github.com/Gabryelf/Digital-Board/blob/main/docs/screens/2026-06-05_20-59-25.png" alt="Интерфейс доски" width="80%">
   </kbd>
 </div>
 
