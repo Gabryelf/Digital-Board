@@ -5,6 +5,7 @@
         <title>Digital Board Tool</title>
         
         <link rel="stylesheet" href="css/tools.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
         </style>
@@ -19,33 +20,28 @@
                         <h1>Digital Board Tool</h1>
                     </div>
 
-                    <!-- Выпадающее меню инструментов -->
                     <div class="tools-dropdown">
                         <button id="toolsDropdownBtn" class="dropdown-btn">
-                            🛠️ Инструменты ▼
+                            <i class="fas fa-paintbrush"></i> Маркер <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="toolsMenu" class="dropdown-content">
-                            <button data-tool="marker" data-icon="🖌️">Маркер</button>
-                            <button data-tool="eraser" data-icon="🧽">Ластик</button>
-                            <button data-tool="line" data-icon="📏">Линия</button>
-                            <button data-tool="rect" data-icon="◻️">Прямоугольник</button>
-                            <button data-tool="circle" data-icon="⚪">Круг</button>
-                            <button data-tool="triangle" data-icon="🔺">Треугольник</button>
+                            <button data-tool="marker" data-icon="fas fa-paintbrush"><i class="fas fa-paintbrush"></i> Маркер</button>
+                            <button data-tool="eraser" data-icon="fas fa-eraser"><i class="fas fa-eraser"></i> Ластик</button>
+                            <button data-tool="line" data-icon="fas fa-chalkboard-user"><i class="fas fa-chalkboard-user"></i> Линия</button>
+                            <button data-tool="rect" data-icon="fas fa-square"><i class="fas fa-square"></i> Прямоугольник</button>
+                            <button data-tool="circle" data-icon="fas fa-circle"><i class="fas fa-circle"></i> Круг</button>
+                            <button data-tool="triangle" data-icon="fas fa-triangle-exclamation"><i class="fas fa-triangle-exclamation"></i> Треугольник</button>
+                            <button data-tool="fill" data-icon="fas fa-fill-drip"><i class="fas fa-fill-drip"></i> Заливка</button>
                         </div>
                     </div>
 
-                    <!-- Слоты для быстрых инструментов -->
                     <div class="quick-slots">
-                        <div class="slots-label">⚡ Быстрые слоты:</div>
-                        <div class="slot-container">
-                            <button class="slot-btn" data-slot="0">➕</button>
-                            <button class="slot-btn" data-slot="1">➕</button>
-                            <button class="slot-btn" data-slot="2">➕</button>
-                        </div>
+                        <div class="slots-label"><i class="fas fa-bolt"></i> Быстрые слоты:</div>
+                        <div class="slot-container" id="slotContainer"></div>
                     </div>
             
                     <div class="color-picker-group">
-                        <span>🎨</span>
+                        <i class="fas fa-palette"></i>
                         <div class="color-swatch" data-color="#000000" style="background:#000;"></div>
                         <div class="color-swatch" data-color="#e74c3c" style="background:#e74c3c;"></div>
                         <div class="color-swatch" data-color="#2ecc71" style="background:#2ecc71;"></div>
@@ -56,13 +52,21 @@
                     </div>
             
                     <div class="size-control">
-                        <label>✏️ Размер</label>
+                        <i class="fas fa-pencil-alt"></i>
+                        <label>Размер</label>
                         <input type="range" id="brushSize" min="2" max="40" value="6" step="1">
                         <span class="size-value" id="sizeValue">6</span>
                     </div>
+
+                    <div class="board-control">
+                        <button id="prevBoardBtn" class="board-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                        <span id="boardCounter" class="board-counter">1 / 5</span>
+                        <button id="nextBoardBtn" class="board-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
             
                     <div class="action-group">
-                        <button id="clearCanvasBtn" class="clear-btn">🗑️ Очистить всё</button>
+                        <button id="settingsBtn" class="settings-btn"><i class="fas fa-cog"></i></button>
+                        <button id="clearCanvasBtn" class="clear-btn"><i class="fas fa-trash-alt"></i> Очистить всё</button>
                         <button id="theme-toggle" class="theme-btn">
                             <img id="theme-icon" src="assets/images/moon.png" alt="Сменить тему">
                         </button>
@@ -81,6 +85,27 @@
                 </div>
                 <div class="separator"></div>
             </footer>
+        </div>
+
+        <!-- Оверлей настроек -->
+        <div id="settingsOverlay" class="settings-overlay">
+            <div class="settings-modal">
+                <div class="settings-header">
+                    <h2><i class="fas fa-cog"></i> Настройки</h2>
+                    <button id="closeSettingsBtn" class="close-settings">&times;</button>
+                </div>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label><i class="fas fa-layer-group"></i> Количество слотов быстрого доступа:</label>
+                        <input type="number" id="slotCountInput" min="1" max="10" value="3" step="1">
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-clone"></i> Количество бордов:</label>
+                        <input type="number" id="boardCountInput" min="1" max="20" value="5" step="1">
+                    </div>
+                    <button id="applySettingsBtn" class="apply-settings-btn"><i class="fas fa-check"></i> Применить</button>
+                </div>
+            </div>
         </div>
 
         <script src="js/drawing.js"></script>

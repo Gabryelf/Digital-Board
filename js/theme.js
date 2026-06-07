@@ -19,10 +19,6 @@
             if (window.drawingAPI && window.drawingAPI.setCanvasBackground) {
                 window.drawingAPI.setCanvasBackground(isDark);
             }
-            
-            if (window.toolsAPI && window.toolsAPI.updateEraserColor) {
-                window.toolsAPI.updateEraserColor();
-            }
         }
         
         if (localStorage.getItem('darkMode') === 'enabled') {

@@ -1,76 +1,123 @@
 // Главный скрипт - координация всех модулей
 (function() {
     let currentTool = 'marker';
+    let slots = [];
+    let slotCount = 3;
     
     function init() {
+        loadSlotsFromStorage();
+        initSlotsUI();
+        
         // Выпадающее меню
         const dropdownBtn = document.getElementById('toolsDropdownBtn');
         const toolsMenu = document.getElementById('toolsMenu');
         
         if (dropdownBtn && toolsMenu) {
-            dropdownBtn.addEventListener('click', () => {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 toolsMenu.classList.toggle('show');
             });
             
-            // Закрываем меню при клике вне
             window.addEventListener('click', (e) => {
-                if (!e.target.matches('.dropdown-btn')) {
-                    if (toolsMenu.classList.contains('show')) {
-                        toolsMenu.classList.remove('show');
-                    }
+                if (!e.target.matches('.dropdown-btn') && !e.target.closest('.dropdown-content')) {
+                    toolsMenu.classList.remove('show');
                 }
             });
             
-            // Обработчики для инструментов в меню
             document.querySelectorAll('#toolsMenu button').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const tool = btn.getAttribute('data-tool');
-                    const icon = btn.getAttribute('data-icon');
-                    const toolName = btn.innerText;
+                    const iconHtml = btn.querySelector('i') ? btn.querySelector('i').cloneNode(true) : null;
+                    const toolName = btn.innerText.trim();
                     
                     if (window.toolsAPI) {
                         window.toolsAPI.setTool(tool);
                         currentTool = tool;
                         updateActiveToolButton(tool);
-                        dropdownBtn.innerHTML = `${icon} ${toolName} ▼`;
+                        if (iconHtml) {
+                            dropdownBtn.innerHTML = '';
+                            dropdownBtn.appendChild(iconHtml);
+                            dropdownBtn.appendChild(document.createTextNode(' ' + toolName + ' '));
+                            const chevron = document.createElement('i');
+                            chevron.className = 'fas fa-chevron-down';
+                            dropdownBtn.appendChild(chevron);
+                        }
                         toolsMenu.classList.remove('show');
                     }
                 });
             });
         }
         
-        // Настройка слотов
-        document.querySelectorAll('.slot-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const slotIndex = parseInt(btn.getAttribute('data-slot'));
-                if (btn.innerHTML === '➕') {
-                    // Сохраняем текущий инструмент в слот
-                    const toolBtn = document.querySelector(`#toolsMenu button[data-tool="${currentTool}"]`);
-                    if (toolBtn && window.toolsAPI) {
-                        const icon = toolBtn.getAttribute('data-icon');
-                        const toolName = toolBtn.innerText;
-                        window.toolsAPI.saveToSlot(slotIndex, currentTool, icon);
-                    }
-                } else {
-                    // Загружаем инструмент из слота
-                    const slot = window.toolsAPI.getSlot(slotIndex);
-                    if (slot && slot.tool) {
-                        if (window.toolsAPI) {
-                            window.toolsAPI.setTool(slot.tool);
-                            currentTool = slot.tool;
-                            updateActiveToolButton(slot.tool);
-                            const toolBtn = document.querySelector(`#toolsMenu button[data-tool="${slot.tool}"]`);
-                            if (toolBtn && dropdownBtn) {
-                                const icon = toolBtn.getAttribute('data-icon');
-                                const toolName = toolBtn.innerText;
-                                dropdownBtn.innerHTML = `${icon} ${toolName} ▼`;
-                            }
-                        }
+        // Настройки
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const applySettingsBtn = document.getElementById('applySettingsBtn');
+        const slotCountInput = document.getElementById('slotCountInput');
+        const boardCountInput = document.getElementById('boardCountInput');
+        
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                if (slotCountInput) slotCountInput.value = slotCount;
+                if (boardCountInput && window.drawingAPI) boardCountInput.value = window.drawingAPI.getBoardCount();
+                settingsOverlay.classList.add('show');
+            });
+        }
+        
+        if (closeSettingsBtn) {
+            closeSettingsBtn.addEventListener('click', () => {
+                settingsOverlay.classList.remove('show');
+            });
+        }
+        
+        if (applySettingsBtn) {
+            applySettingsBtn.addEventListener('click', () => {
+                if (slotCountInput) {
+                    const newSlotCount = parseInt(slotCountInput.value);
+                    if (newSlotCount >= 1 && newSlotCount <= 10) {
+                        slotCount = newSlotCount;
+                        saveSlotsToStorage();
+                        initSlotsUI();
                     }
                 }
+                if (boardCountInput && window.drawingAPI) {
+                    const newBoardCount = parseInt(boardCountInput.value);
+                    if (newBoardCount >= 1 && newBoardCount <= 20) {
+                        window.drawingAPI.setBoardCount(newBoardCount);
+                    }
+                }
+                settingsOverlay.classList.remove('show');
             });
+        }
+        
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) {
+                settingsOverlay.classList.remove('show');
+            }
         });
+        
+        // Навигация по бордам
+        const prevBoardBtn = document.getElementById('prevBoardBtn');
+        const nextBoardBtn = document.getElementById('nextBoardBtn');
+        
+        if (prevBoardBtn) {
+            prevBoardBtn.addEventListener('click', () => {
+                if (window.drawingAPI) {
+                    const currentIndex = window.drawingAPI.getCurrentBoardIndex();
+                    window.drawingAPI.switchToBoard(currentIndex - 1);
+                }
+            });
+        }
+        
+        if (nextBoardBtn) {
+            nextBoardBtn.addEventListener('click', () => {
+                if (window.drawingAPI) {
+                    const currentIndex = window.drawingAPI.getCurrentBoardIndex();
+                    window.drawingAPI.switchToBoard(currentIndex + 1);
+                }
+            });
+        }
         
         // Настройка цветов
         document.querySelectorAll('.color-swatch').forEach(sw => {
@@ -84,18 +131,15 @@
             if (window.drawingAPI) window.drawingAPI.setColor(e.target.value);
         });
         
-        // Настройка размера кисти
         document.getElementById('brushSize')?.addEventListener('input', (e) => {
             if (window.drawingAPI) window.drawingAPI.setBrushSize(parseInt(e.target.value));
         });
         
-        // Очистка канваса
         document.getElementById('clearCanvasBtn')?.addEventListener('click', () => {
             if (window.drawingAPI) window.drawingAPI.clearCanvas();
         });
         
         function updateActiveToolButton(activeTool) {
-            // Обновляем активный класс в меню
             document.querySelectorAll('#toolsMenu button').forEach(btn => {
                 btn.classList.remove('active-tool');
                 if (btn.getAttribute('data-tool') === activeTool) {
@@ -104,7 +148,6 @@
             });
         }
         
-        // Добавляем обработчики touch для canvas
         const canvas = document.getElementById('drawCanvas');
         
         canvas.addEventListener('touchstart', (e) => {
@@ -131,7 +174,116 @@
             canvas.dispatchEvent(event);
         });
         
-        console.log('Script.js готов');
+    }
+    
+    function initSlotsUI() {
+        const slotContainer = document.getElementById('slotContainer');
+        if (!slotContainer) return;
+        
+        slotContainer.innerHTML = '';
+        for (let i = 0; i < slotCount; i++) {
+            const slot = slots[i] || null;
+            const slotBtn = document.createElement('button');
+            slotBtn.className = 'slot-btn';
+            slotBtn.setAttribute('data-slot', i);
+            
+            if (slot && slot.tool) {
+                slotBtn.innerHTML = `<i class="${slot.icon}"></i>`;
+                slotBtn.title = slot.toolName;
+            } else {
+                slotBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                slotBtn.title = 'Добавить инструмент';
+            }
+            
+            slotBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleSlotClick(i);
+            });
+            
+            slotBtn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                if (slots[i]) {
+                    slots[i] = null;
+                    saveSlotsToStorage();
+                    initSlotsUI();
+                }
+            });
+            
+            slotContainer.appendChild(slotBtn);
+        }
+    }
+    
+    function handleSlotClick(slotIndex) {
+        const existingSlot = slots[slotIndex];
+        const currentToolObj = getCurrentToolInfo();
+        
+        if (!existingSlot) {
+            if (currentToolObj) {
+                slots[slotIndex] = {
+                    tool: currentTool,
+                    icon: currentToolObj.icon,
+                    toolName: currentToolObj.name
+                };
+                saveSlotsToStorage();
+                initSlotsUI();
+            }
+        } else {
+            if (window.toolsAPI) {
+                window.toolsAPI.setTool(existingSlot.tool);
+                currentTool = existingSlot.tool;
+                updateDropdownButton(existingSlot.icon, existingSlot.toolName);
+                updateActiveToolButton(existingSlot.tool);
+            }
+        }
+    }
+    
+    function getCurrentToolInfo() {
+        const activeBtn = document.querySelector(`#toolsMenu button[data-tool="${currentTool}"]`);
+        if (activeBtn) {
+            const iconElement = activeBtn.querySelector('i');
+            return {
+                icon: iconElement ? iconElement.className : 'fas fa-paintbrush',
+                name: activeBtn.innerText.trim()
+            };
+        }
+        return null;
+    }
+    
+    function updateDropdownButton(iconClass, toolName) {
+        const dropdownBtn = document.getElementById('toolsDropdownBtn');
+        if (dropdownBtn) {
+            dropdownBtn.innerHTML = '';
+            const icon = document.createElement('i');
+            icon.className = iconClass;
+            dropdownBtn.appendChild(icon);
+            dropdownBtn.appendChild(document.createTextNode(' ' + toolName + ' '));
+            const chevron = document.createElement('i');
+            chevron.className = 'fas fa-chevron-down';
+            dropdownBtn.appendChild(chevron);
+        }
+    }
+    
+    function updateActiveToolButton(activeTool) {
+        document.querySelectorAll('#toolsMenu button').forEach(btn => {
+            btn.classList.remove('active-tool');
+            if (btn.getAttribute('data-tool') === activeTool) {
+                btn.classList.add('active-tool');
+            }
+        });
+    }
+    
+    function saveSlotsToStorage() {
+        localStorage.setItem('quickSlots', JSON.stringify(slots));
+        localStorage.setItem('slotCount', slotCount);
+    }
+    
+    function loadSlotsFromStorage() {
+        const savedSlots = localStorage.getItem('quickSlots');
+        const savedSlotCount = localStorage.getItem('slotCount');
+        
+        if (savedSlotCount) slotCount = parseInt(savedSlotCount);
+        if (savedSlots) slots = JSON.parse(savedSlots);
+        else slots = [];
     }
     
     if (document.readyState === 'loading') {
