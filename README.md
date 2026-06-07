@@ -32,6 +32,9 @@
   <kbd>
     <img src="https://github.com/Gabryelf/Digital-Board/blob/main/docs/screens/2026-06-05_20-59-25.png" alt="Интерфейс доски" width="80%">
   </kbd>
+  <kbd>
+    <img src="https://github.com/Gabryelf/Digital-Board/blob/main/docs/screens/2026-06-07_20-17-25.png" alt="Интерфейс доски" width="80%">
+  </kbd>
 </div>
 
 ---
