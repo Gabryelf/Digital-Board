@@ -14,16 +14,34 @@
         <div id="main_conteiner"> 
             <div class="app-container">
                 <div class="toolbar">
-                    <!-- Левая группа: логотип и название -->
                     <div class="brand-group">
                         <img id="logoImg" src="assets/images/logo.png" alt="logo">
                         <h1>Digital Board Tool</h1>
                     </div>
 
-                    <!-- Центральная группа: инструменты -->
-                    <div class="tools-group">
-                        <span>✏️</span>
-                        <button id="markerBtn" class="active-tool">🖌️ Маркер</button>
+                    <!-- Выпадающее меню инструментов -->
+                    <div class="tools-dropdown">
+                        <button id="toolsDropdownBtn" class="dropdown-btn">
+                            🛠️ Инструменты ▼
+                        </button>
+                        <div id="toolsMenu" class="dropdown-content">
+                            <button data-tool="marker" data-icon="🖌️">Маркер</button>
+                            <button data-tool="eraser" data-icon="🧽">Ластик</button>
+                            <button data-tool="line" data-icon="📏">Линия</button>
+                            <button data-tool="rect" data-icon="◻️">Прямоугольник</button>
+                            <button data-tool="circle" data-icon="⚪">Круг</button>
+                            <button data-tool="triangle" data-icon="🔺">Треугольник</button>
+                        </div>
+                    </div>
+
+                    <!-- Слоты для быстрых инструментов -->
+                    <div class="quick-slots">
+                        <div class="slots-label">⚡ Быстрые слоты:</div>
+                        <div class="slot-container">
+                            <button class="slot-btn" data-slot="0">➕</button>
+                            <button class="slot-btn" data-slot="1">➕</button>
+                            <button class="slot-btn" data-slot="2">➕</button>
+                        </div>
                     </div>
             
                     <div class="color-picker-group">
@@ -66,6 +84,8 @@
         </div>
 
         <script src="js/drawing.js"></script>
+        <script src="js/tools.js"></script>
         <script src="js/theme.js"></script>
+        <script src="js/script.js"></script>
     </body>
 </html>

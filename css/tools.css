@@ -107,11 +107,18 @@ button, .color-swatch, .clear-btn {
     padding: 0.25rem 0.8rem;
     border-radius: 1.5rem;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover, .color-swatch:hover, .clear-btn:hover {
+    transform: scale(0.95);
+    opacity: 0.9;
 }
 
 .active-tool {
     background: #ffcf9a;
     border: 1px solid #b97f3a;
+    box-shadow: 0 0 5px rgba(255, 207, 154, 0.5);
 }
 
 .color-picker-group {
@@ -128,6 +135,7 @@ button, .color-swatch, .clear-btn {
     height: 28px;
     border-radius: 50%;
     border: 2px solid #eee;
+    cursor: pointer;
 }
 
 input[type="color"] {
@@ -154,6 +162,7 @@ input[type="color"] {
 
 #brushSize {
     width: 60px;
+    cursor: pointer;
 }
 
 .size-value {
@@ -175,9 +184,9 @@ input[type="color"] {
     overflow: hidden;
     flex: 1;
     display: flex;
+    background: #ffffff;
 }
 
-/* ВАЖНО: НЕТ background у canvas */
 canvas {
     display: block;
     width: 100%;
@@ -198,7 +207,7 @@ footer {
     right: 10px;
 }
 
-/* Тёмная тема - ТОЛЬКО ДЛЯ ИНТЕРФЕЙСА */
+/* Тёмная тема */
 .dark-mode {
     background-color: #121212;
 }
@@ -219,6 +228,18 @@ footer {
     background: #1e1e1e;
 }
 
+.dark-mode .tools-group {
+    background: #2a2520;
+}
+
+.dark-mode .color-picker-group {
+    background: #2a2520;
+}
+
+.dark-mode .size-control {
+    background: #2a2520;
+}
+
 @media (max-width: 1000px) {
     .toolbar {
         flex-direction: column;
@@ -226,4 +247,155 @@ footer {
     h1 {
         font-size: 1rem;
     }
+    .tools-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Добавить в конец файла tools.css */
+
+/* Выпадающее меню */
+.tools-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background: #f1e8d9;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    min-width: 140px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #f1e8d9;
+    min-width: 160px;
+    border-radius: 0.5rem;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.dropdown-content.show {
+    display: flex;
+}
+
+.dropdown-content button {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    text-align: left;
+    width: 100%;
+    border-radius: 0;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-content button:hover {
+    background-color: #ffcf9a;
+}
+
+.dropdown-content button.active-tool {
+    background-color: #ffcf9a;
+    border-left: 3px solid #b97f3a;
+}
+
+/* Слоты для быстрых инструментов */
+.quick-slots {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #2e2220;
+    padding: 0.2rem 0.8rem;
+    border-radius: 2rem;
+}
+
+.slots-label {
+    color: #ffe3b3;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.slot-container {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.slot-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1e8d9;
+}
+
+.slot-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 1000px) {
+    .quick-slots {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dropdown-btn {
+        min-width: 120px;
+        font-size: 0.75rem;
+        height: 35px;
+    }
+    
+    .slot-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Тёмная тема для новых элементов */
+.dark-mode .dropdown-btn {
+    background: #2a2a2a;
+    color: #ffd966;
+}
+
+.dark-mode .dropdown-content {
+    background-color: #2a2a2a;
+}
+
+.dark-mode .dropdown-content button {
+    color: #ffd966;
+}
+
+.dark-mode .dropdown-content button:hover {
+    background-color: #3a3a3a;
+}
+
+.dark-mode .quick-slots {
+    background: #2a2520;
+}
+
+.dark-mode .slot-btn {
+    background: #2a2a2a;
+    color: #ffd966;
 }

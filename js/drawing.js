@@ -1,20 +1,19 @@
-// Рисование на канвасе
+// Базовые функции рисования
 (function() {
     const canvas = document.getElementById('drawCanvas');
     const ctx = canvas.getContext('2d');
     
-    let drawing = false;
     let currentColor = '#000000';
     let currentBrushSize = 6;
-    let lastX = 0;
-    let lastY = 0;
+    let isDarkMode = false;
+    let currentBgColor = '#ffffff';
     
     // Установка размеров канваса
     canvas.width = 1000;
     canvas.height = 800;
     
     // Устанавливаем белый фон
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = currentBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     function applyBrushSettings() {
@@ -47,44 +46,8 @@
         return { x: canvasX, y: canvasY };
     }
     
-    function startDrawing(e) {
-        e.preventDefault();
-        const coords = getCanvasCoordinates(e);
-        if (!coords) return;
-        drawing = true;
-        lastX = coords.x;
-        lastY = coords.y;
-        
-        ctx.beginPath();
-        ctx.arc(lastX, lastY, currentBrushSize / 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-    }
-    
-    function draw(e) {
-        if (!drawing) return;
-        e.preventDefault();
-        const coords = getCanvasCoordinates(e);
-        if (!coords) return;
-        
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(coords.x, coords.y);
-        ctx.stroke();
-        
-        lastX = coords.x;
-        lastY = coords.y;
-    }
-    
-    function stopDrawing() {
-        drawing = false;
-    }
-    
     function clearCanvas() {
-        // Очищаем текущим фоном (белый или чёрный)
-        const currentBg = document.body.classList.contains('dark-mode') ? '#1e1e1e' : '#ffffff';
-        ctx.fillStyle = currentBg;
+        ctx.fillStyle = currentBgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         applyBrushSettings();
     }
@@ -105,49 +68,59 @@
         applyBrushSettings();
     }
     
-    // Функция смены фона канваса
     function setCanvasBackground(isDark) {
-        const newBgColor = isDark ? '#1e1e1e' : '#ffffff';
+        isDarkMode = isDark;
+        currentBgColor = isDark ? '#1e1e1e' : '#ffffff';
         
-        // Сохраняем рисунок
+        // Сохраняем текущий рисунок
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         
         // Меняем фон
-        ctx.fillStyle = newBgColor;
+        ctx.fillStyle = currentBgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Восстанавливаем рисунок
-        ctx.putImageData(imageData, 0, 0);
+        // Восстанавливаем рисунок, но заменяем белый цвет на фоновый для ластика
+        const imageDataArray = imageData.data;
+        for (let i = 0; i < imageDataArray.length; i += 4) {
+            // Если пиксель был белым (или очень близким к белому) в светлой теме
+            if (!isDark && imageDataArray[i] === 255 && imageDataArray[i+1] === 255 && imageDataArray[i+2] === 255) {
+                // Оставляем как есть (белый)
+                continue;
+            } else if (isDark && imageDataArray[i] === 30 && imageDataArray[i+1] === 30 && imageDataArray[i+2] === 30) {
+                // Оставляем как есть (темный)
+                continue;
+            }
+        }
         
+        ctx.putImageData(imageData, 0, 0);
         applyBrushSettings();
-        console.log('Фон изменён на:', newBgColor);
     }
     
-    // Добавляем обработчики
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-    canvas.addEventListener('touchstart', startDrawing, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDrawing);
-    canvas.addEventListener('touchcancel', stopDrawing);
-    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    function getEraserColor() {
+        return currentBgColor;
+    }
     
-    // Настройка UI
-    document.querySelectorAll('.color-swatch').forEach(sw => {
-        sw.addEventListener('click', () => setColor(sw.getAttribute('data-color')));
-    });
-    document.getElementById('customColorPicker')?.addEventListener('input', (e) => setColor(e.target.value));
-    document.getElementById('brushSize')?.addEventListener('input', (e) => setBrushSize(parseInt(e.target.value)));
-    document.getElementById('clearCanvasBtn')?.addEventListener('click', () => clearCanvas());
+    function getCanvas() { return canvas; }
+    function getContext() { return ctx; }
+    function getCurrentColor() { return currentColor; }
+    function getCurrentBrushSize() { return currentBrushSize; }
+    function getIsDarkMode() { return isDarkMode; }
+    function getCurrentBgColor() { return currentBgColor; }
     
     // Экспорт API
     window.drawingAPI = {
         clearCanvas: clearCanvas,
         setColor: setColor,
         setBrushSize: setBrushSize,
-        setCanvasBackground: setCanvasBackground
+        setCanvasBackground: setCanvasBackground,
+        getCanvas: getCanvas,
+        getContext: getContext,
+        getCurrentColor: getCurrentColor,
+        getCurrentBrushSize: getCurrentBrushSize,
+        getIsDarkMode: getIsDarkMode,
+        getCurrentBgColor: getCurrentBgColor,
+        getEraserColor: getEraserColor,
+        applyBrushSettings: applyBrushSettings
     };
     
     console.log('Drawing.js готов');
