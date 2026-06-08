@@ -25,6 +25,10 @@
         lastX = coords.x;
         lastY = coords.y;
         api.saveBoard();
+        
+        if (!api.getSelectionKeepMode() && window.selectionAPI) {
+            window.selectionAPI.clearSelection();
+        }
     }
     
     function drawEraser(e) {
@@ -54,6 +58,10 @@
         lastX = coords.x;
         lastY = coords.y;
         api.saveBoard();
+        
+        if (!api.getSelectionKeepMode() && window.selectionAPI) {
+            window.selectionAPI.clearSelection();
+        }
     }
     
     function performFill(e) {
@@ -62,6 +70,10 @@
         if (coords) {
             api.floodFill(Math.floor(coords.x), Math.floor(coords.y));
             api.saveBoard();
+        }
+        
+        if (!api.getSelectionKeepMode() && window.selectionAPI) {
+            window.selectionAPI.clearSelection();
         }
     }
     
@@ -113,7 +125,11 @@
         if (!coords) return;
         
         ctx.putImageData(savedImageData, 0, 0);
-        const radius = Math.sqrt(Math.pow(coords.x - startX, 2) + Math.pow(coords.y - startY, 2));
+        // Исправлено: круг рисуется от центра
+        const dx = coords.x - startX;
+        const dy = coords.y - startY;
+        const radius = Math.sqrt(dx * dx + dy * dy);
+        
         ctx.beginPath();
         ctx.arc(startX, startY, radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -231,13 +247,44 @@
         } else if (currentTool === 'marker' || currentTool === 'eraser') {
             canvas.addEventListener('mousedown', startFreeDrawing);
             canvas.addEventListener('mousemove', drawFree);
+            canvas.addEventListener('mouseup', finishDrawing);
+            canvas.addEventListener('mouseleave', finishDrawing);
+        } 
+        else if (currentTool === 'select-rect') {
+            canvas.addEventListener('mousedown', (e) => {
+                if (window.selectionAPI) {
+                    // Пробуем начать перемещение существующего выделения
+                    const dragStarted = window.selectionAPI.startDrag(e);
+                    if (!dragStarted) {
+                        // Если не кликнули по выделению, начинаем новое выделение
+                        window.selectionAPI.startSelection(e);
+                    }
+                }
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (window.selectionAPI) {
+                    if (window.selectionAPI.getIsDragging && window.selectionAPI.getIsDragging()) {
+                        window.selectionAPI.updateDrag(e);
+                    } else if (!window.selectionAPI.hasSelection()) {
+                        window.selectionAPI.updateSelection(e);
+                    }
+                }
+            });
+            canvas.addEventListener('mouseup', (e) => {
+                if (window.selectionAPI) {
+                    if (window.selectionAPI.getIsDragging && window.selectionAPI.getIsDragging()) {
+                        window.selectionAPI.endDrag(e);
+                    } else if (!window.selectionAPI.hasSelection()) {
+                        window.selectionAPI.endSelection(e);
+                    }
+                }
+            });
         } else {
             canvas.addEventListener('mousedown', startShapeWrapper);
             canvas.addEventListener('mousemove', drawShapeWrapper);
+            canvas.addEventListener('mouseup', finishDrawing);
+            canvas.addEventListener('mouseleave', finishDrawing);
         }
-        
-        canvas.addEventListener('mouseup', finishDrawing);
-        canvas.addEventListener('mouseleave', finishDrawing);
     }
     
     window.toolsAPI = {

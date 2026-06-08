@@ -7,6 +7,7 @@
     function init() {
         loadSlotsFromStorage();
         initSlotsUI();
+        initSelectionPanel();
         
         // Выпадающее меню
         const dropdownBtn = document.getElementById('toolsDropdownBtn');
@@ -56,11 +57,13 @@
         const applySettingsBtn = document.getElementById('applySettingsBtn');
         const slotCountInput = document.getElementById('slotCountInput');
         const boardCountInput = document.getElementById('boardCountInput');
+        const selectionKeepModeCheckbox = document.getElementById('selectionKeepMode');
         
         if (settingsBtn) {
             settingsBtn.addEventListener('click', () => {
                 if (slotCountInput) slotCountInput.value = slotCount;
                 if (boardCountInput && window.drawingAPI) boardCountInput.value = window.drawingAPI.getBoardCount();
+                if (selectionKeepModeCheckbox && window.drawingAPI) selectionKeepModeCheckbox.checked = window.drawingAPI.getSelectionKeepMode();
                 settingsOverlay.classList.add('show');
             });
         }
@@ -87,6 +90,9 @@
                         window.drawingAPI.setBoardCount(newBoardCount);
                     }
                 }
+                if (selectionKeepModeCheckbox && window.drawingAPI) {
+                    window.drawingAPI.setSelectionKeepMode(selectionKeepModeCheckbox.checked);
+                }
                 settingsOverlay.classList.remove('show');
             });
         }
@@ -97,7 +103,7 @@
             }
         });
         
-        // Навигация по бордам
+        // Навигация по бордам - ИСПРАВЛЕНО
         const prevBoardBtn = document.getElementById('prevBoardBtn');
         const nextBoardBtn = document.getElementById('nextBoardBtn');
         
@@ -173,7 +179,72 @@
             const event = new MouseEvent('mouseup');
             canvas.dispatchEvent(event);
         });
+    }
+    
+    function initSelectionPanel() {
+        // Кнопка копировать
+        document.getElementById('copySelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.copySelection();
+            }
+        });
         
+        // Кнопка вырезать
+        document.getElementById('cutSelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.cutSelection();
+            }
+        });
+        
+        // Кнопка вставить
+        document.getElementById('pasteSelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.pasteSelection();
+            }
+        });
+        
+        // Выбор цветов градиента
+        const gradientColor1 = document.getElementById('gradientColor1');
+        const gradientColor2 = document.getElementById('gradientColor2');
+        
+        if (gradientColor1) {
+            gradientColor1.addEventListener('input', (e) => {
+                if (window.selectionAPI) {
+                    const colors = window.selectionAPI.getGradientColors();
+                    window.selectionAPI.setGradientColors(e.target.value, colors.color2);
+                }
+            });
+        }
+        
+        if (gradientColor2) {
+            gradientColor2.addEventListener('input', (e) => {
+                if (window.selectionAPI) {
+                    const colors = window.selectionAPI.getGradientColors();
+                    window.selectionAPI.setGradientColors(colors.color1, e.target.value);
+                }
+            });
+        }
+        
+        // Кнопка градиент
+        document.getElementById('gradientSelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.applyGradient();
+            }
+        });
+        
+        // Кнопка заливка
+        document.getElementById('fillSelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.applyFill();
+            }
+        });
+        
+        // Кнопка отменить захват
+        document.getElementById('cancelSelectionBtn')?.addEventListener('click', () => {
+            if (window.selectionAPI) {
+                window.selectionAPI.clearSelection();
+            }
+        });
     }
     
     function initSlotsUI() {

@@ -32,6 +32,10 @@
                             <button data-tool="circle" data-icon="fas fa-circle"><i class="fas fa-circle"></i> Круг</button>
                             <button data-tool="triangle" data-icon="fas fa-triangle-exclamation"><i class="fas fa-triangle-exclamation"></i> Треугольник</button>
                             <button data-tool="fill" data-icon="fas fa-fill-drip"><i class="fas fa-fill-drip"></i> Заливка</button>
+                            <div style="height: 1px; background: #ccc; margin: 5px 0;"></div>
+                            <button data-tool="select-rect" data-icon="fas fa-crop-alt"><i class="fas fa-crop-alt"></i> Захват (прямоугольник)</button>
+                            <button data-tool="select-circle" data-icon="fas fa-circle-notch"><i class="fas fa-circle-notch"></i> Захват (круг)</button>
+                            <button data-tool="select-free" data-icon="fas fa-draw-polygon"><i class="fas fa-draw-polygon"></i> Захват (свободный)</button>
                         </div>
                     </div>
 
@@ -75,6 +79,23 @@
             
                 <div class="whiteboard">
                     <canvas id="drawCanvas" width="1000" height="800"></canvas>
+                    
+                    <!-- Панель действий для выделения -->
+                    <div class="selection-panel" id="selectionPanel">
+                        <button id="copySelectionBtn"><i class="fas fa-copy"></i> Копировать</button>
+                        <button id="cutSelectionBtn"><i class="fas fa-cut"></i> Вырезать</button>
+                        <button id="pasteSelectionBtn"><i class="fas fa-paste"></i> Вставить</button>
+                        
+                        <div style="display: flex; gap: 5px; margin: 5px 0; align-items: center;">
+                            <span style="color: #ffd966; font-size: 12px;">Градиент:</span>
+                            <input type="color" id="gradientColor1" value="#ff0000" style="width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">
+                            <input type="color" id="gradientColor2" value="#0000ff" style="width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">
+                            <button id="gradientSelectionBtn" style="flex: 1; padding: 5px;"><i class="fas fa-chart-line"></i> Применить</button>
+                        </div>
+                        
+                        <button id="fillSelectionBtn"><i class="fas fa-fill-drip"></i> Заливка</button>
+                        <button id="cancelSelectionBtn" class="danger"><i class="fas fa-times"></i> Отменить выделение</button>
+                    </div>
                 </div>
             </div>
 
@@ -103,12 +124,23 @@
                         <label><i class="fas fa-clone"></i> Количество бордов:</label>
                         <input type="number" id="boardCountInput" min="1" max="20" value="5" step="1">
                     </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-save"></i> Сохранять выделение после действий:</label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="selectionKeepMode">
+                            <span class="checkbox-custom"></span>
+                            <span>Включить режим сохранения выделения</span>
+                        </label>
+                    </div>
                     <button id="applySettingsBtn" class="apply-settings-btn"><i class="fas fa-check"></i> Применить</button>
                 </div>
+
             </div>
         </div>
 
+        <!-- скрипты -->
         <script src="js/drawing.js"></script>
+        <script src="js/selection.js"></script>
         <script src="js/tools.js"></script>
         <script src="js/theme.js"></script>
         <script src="js/script.js"></script>

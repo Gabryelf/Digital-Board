@@ -26,6 +26,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
 }
 
 .toolbar {
@@ -83,20 +84,6 @@ h1 {
 .theme-btn img {
     width: 20px;
     height: 20px;
-}
-
-.tools-group {
-    display: flex;
-    gap: 0.35rem;
-    align-items: center;
-    background: #2e2220;
-    padding: 0.25rem 0.8rem;
-    border-radius: 2rem;
-}
-
-.tools-group span {
-    color: #f0e2c5;
-    font-size: 0.6rem;
 }
 
 button, .color-swatch, .clear-btn {
@@ -185,6 +172,7 @@ input[type="color"] {
     flex: 1;
     display: flex;
     background: #ffffff;
+    position: relative;
 }
 
 canvas {
@@ -207,53 +195,70 @@ footer {
     right: 10px;
 }
 
-/* Тёмная тема */
-.dark-mode {
-    background-color: #121212;
+/* Панель захвата */
+.selection-panel {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #2b2a2a;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    min-width: 140px;
 }
 
-.dark-mode #main_conteiner {
-    background: #0a0a0a;
+.selection-panel.show {
+    display: flex;
 }
 
-.dark-mode .toolbar {
+.selection-panel button {
+    background: #f1e8d9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.selection-panel button:hover {
+    background: #ffcf9a;
+    transform: scale(0.98);
+}
+
+.selection-panel button.danger {
+    background: #d64531;
+    color: white;
+}
+
+/* Режим перемещения выделения */
+body.selection-moving {
+    cursor: move !important;
+}
+
+/* Темная тема для панели */
+.dark-mode .selection-panel {
     background: #1a1a1a;
 }
 
-.dark-mode h1 {
+.dark-mode .selection-panel button {
+    background: #2a2a2a;
     color: #ffd966;
 }
 
-.dark-mode .whiteboard {
-    background: #1e1e1e;
+.dark-mode .selection-panel button.danger {
+    background: #d64531;
+    color: white;
 }
-
-.dark-mode .tools-group {
-    background: #2a2520;
-}
-
-.dark-mode .color-picker-group {
-    background: #2a2520;
-}
-
-.dark-mode .size-control {
-    background: #2a2520;
-}
-
-@media (max-width: 1000px) {
-    .toolbar {
-        flex-direction: column;
-    }
-    h1 {
-        font-size: 1rem;
-    }
-    .tools-group {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
-/* Добавить в конец файла tools.css */
 
 /* Выпадающее меню */
 .tools-dropdown {
@@ -283,7 +288,7 @@ footer {
     top: 100%;
     left: 0;
     background-color: #f1e8d9;
-    min-width: 160px;
+    min-width: 200px;
     border-radius: 0.5rem;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1000;
@@ -315,6 +320,12 @@ footer {
 .dropdown-content button.active-tool {
     background-color: #ffcf9a;
     border-left: 3px solid #b97f3a;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 5px 0;
 }
 
 /* Слоты для быстрых инструментов */
@@ -351,53 +362,6 @@ footer {
 
 .slot-btn:hover {
     transform: scale(1.05);
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 1000px) {
-    .quick-slots {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .dropdown-btn {
-        min-width: 120px;
-        font-size: 0.75rem;
-        height: 35px;
-    }
-    
-    .slot-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-    }
-}
-
-/* Тёмная тема для новых элементов */
-.dark-mode .dropdown-btn {
-    background: #2a2a2a;
-    color: #ffd966;
-}
-
-.dark-mode .dropdown-content {
-    background-color: #2a2a2a;
-}
-
-.dark-mode .dropdown-content button {
-    color: #ffd966;
-}
-
-.dark-mode .dropdown-content button:hover {
-    background-color: #3a3a3a;
-}
-
-.dark-mode .quick-slots {
-    background: #2a2520;
-}
-
-.dark-mode .slot-btn {
-    background: #2a2a2a;
-    color: #ffd966;
 }
 
 /* Настройки оверлея */
@@ -489,7 +453,7 @@ footer {
     font-family: 'Noto Sans', sans-serif;
 }
 
-.setting-item input {
+.setting-item input[type="number"] {
     width: 100%;
     padding: 0.6rem;
     border-radius: 0.5rem;
@@ -497,6 +461,46 @@ footer {
     background: #1a1a1a;
     color: #ffd966;
     font-size: 1rem;
+}
+
+/* Стили для чекбокса */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    background: #1a1a1a;
+    border: 2px solid #ffd966;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffd966;
+    font-size: 14px;
+}
+
+.checkbox-wrapper span {
+    color: #f1e8d9;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 0.9rem;
 }
 
 .apply-settings-btn {
@@ -551,7 +555,6 @@ footer {
     font-size: 1rem;
 }
 
-/* Слоты контейнер с flex-wrap для адаптивности */
 .slot-container {
     display: flex;
     gap: 0.3rem;
@@ -570,9 +573,18 @@ footer {
     background: #1a1a1a;
 }
 
-.dark-mode .setting-item input {
+.dark-mode .setting-item input[type="number"] {
     background: #0a0a0a;
     border-color: #2a2a2a;
+    color: #ffd966;
+}
+
+.dark-mode .checkbox-custom {
+    background: #0a0a0a;
+    border-color: #ffd966;
+}
+
+.dark-mode .checkbox-wrapper span {
     color: #ffd966;
 }
 
@@ -602,4 +614,42 @@ footer {
     .slot-container {
         order: 12;
     }
+    
+    .selection-panel {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        top: auto;
+        transform: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+canvas.selecting {
+    cursor: crosshair !important;
+}
+
+canvas.dragging {
+    cursor: move !important;
+}
+
+.selection-panel {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #2b2a2a;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    min-width: 160px;
+}
+
+.selection-panel.show {
+    display: flex;
 }

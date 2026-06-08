@@ -10,6 +10,7 @@
     let boards = [];
     let currentBoardIndex = 0;
     let boardCount = 5;
+    let selectionKeepMode = false;
     
     // Установка размеров канваса
     canvas.width = 1000;
@@ -37,6 +38,7 @@
             ctx.drawImage(board, 0, 0);
             applyBrushSettings();
             updateBoardCounter();
+            
         }
     }
     
@@ -86,7 +88,6 @@
         loadBoard(currentBoardIndex);
     }
     
-    // Функция заливки
     function floodFill(startX, startY, fillColor) {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
@@ -223,6 +224,14 @@
     function floodFillArea(x, y) { floodFill(x, y, currentColor); }
     function saveBoard() { saveCurrentBoard(); }
     
+    function setSelectionKeepMode(mode) {
+        selectionKeepMode = mode;
+    }
+    
+    function getSelectionKeepMode() {
+        return selectionKeepMode;
+    }
+    
     initBoards(boardCount);
     
     window.drawingAPI = {
@@ -243,7 +252,9 @@
         switchToBoard: switchToBoard,
         setBoardCount: setBoardCount,
         getBoardCount: () => boards.length,
-        getCurrentBoardIndex: () => currentBoardIndex
+        getCurrentBoardIndex: () => currentBoardIndex,
+        setSelectionKeepMode: setSelectionKeepMode,
+        getSelectionKeepMode: getSelectionKeepMode
     };
     
 })();
